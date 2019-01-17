@@ -1,0 +1,40 @@
+<div class="choices">
+    <div *ngFor="let item of question.question">
+
+                    <span>
+                <p *ngIf="item.type === 'paragraph'">
+                    {{item.value}}
+                </p>
+                <ion-img *ngIf="item.type === 'image'" [src]="item.value"></ion-img>
+            </span>
+    </div>
+    <ul>
+        <li class="option" tappable #optionA (click)="chooseAnswer(0, optionA)">
+            <div *ngFor="let item of question.option_a">
+                <p *ngIf="item.type === 'paragraph'">{{item.value}}</p>
+                <ion-img *ngIf="item.type === 'image'" [src]="item.value"></ion-img>
+            </div>
+        </li>
+
+        <li class="option" tappable #optionB (click)="chooseAnswer(1, optionB)">
+            <div *ngFor="let item of question.option_b">
+                <p *ngIf="item.type === 'paragraph'">{{item.value}}</p>
+                <ion-img *ngIf="item.type === 'image'" [src]="item.value"></ion-img>
+            </div>
+        </li>
+
+        <li class="option" tappable #optionC (click)="chooseAnswer(2, optionC)">
+            <div *ngFor="let item of question.option_c">
+                <p *ngIf="item.type === 'paragraph'">{{item.value}}</p>
+                <ion-img *ngIf="item.type === 'image'" [src]="item.value"></ion-img>
+            </div>
+        </li>
+
+        <li class="option" tappable #optionD (click)="chooseAnswer(3, optionD)">
+            <div *ngFor="let item of question.option_d">
+                <p *ngIf="item.type === 'paragraph'">{{item.value}}</p>
+                <ion-img *ngIf="item.type === 'image'" [src]="item.value"></ion-img>
+            </div>
+        </li>
+    </ul>
+</div>

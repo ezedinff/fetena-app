@@ -1,0 +1,16 @@
+<ion-card style="margin-top: 25%;">
+    <ion-img src="/assets/images/subjects_background.png"></ion-img>
+    <div class="sub-image">
+        <ion-img src="/assets/images/civics.png" style="width: 30%; height: 30%;"></ion-img>
+    </div>
+    <h6 style="text-align: center; position: relative; top: -15%;">Civics</h6>
+    <ion-card-content style="position: relative; top: -15%;">
+        <ion-list>
+            <ion-item style="border: none;">
+                <ion-label>Exam Mode</ion-label>
+                <ion-checkbox slot="start" [(ngModel)]="mode" color="primary"></ion-checkbox>
+            </ion-item>
+        </ion-list>
+        <ion-button style="float: right;" color="primary" (click)="start()">Start</ion-button>
+    </ion-card-content>
+</ion-card>

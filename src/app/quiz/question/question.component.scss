@@ -1,0 +1,28 @@
+.choices {
+  ul {
+    margin: 0;
+    padding: 0;
+
+    li {
+      padding: 0.5rem;
+      background: #eaeeee;
+      border-radius: .5rem;
+      margin: 1rem .5rem;
+      list-style: none;
+
+      &.correct-answer {
+        background-color: rgba(34, 175, 131, .3);
+        box-shadow: 0 0 0 2px rgba(34, 175, 131, .3);
+      }
+
+      &.incorrect-answer {
+        box-shadow: 0 0 0 2px rgba(255, 120, 150, 0.8);
+      }
+
+      &.unknown-answer {
+        box-shadow: 0 0 0 2px rgba(255, 255, 150, 0.8);
+      }
+
+    }
+  }
+}
