@@ -2,6 +2,7 @@
     <ion-toolbar color="primary">
         <ion-title>Quiz</ion-title>
         <ion-buttons slot="end" (click)="back()">
+            <ion-back-button></ion-back-button>
             <ion-icon slot="icon-only" name="more"></ion-icon>
         </ion-buttons>
     </ion-toolbar>
@@ -11,7 +12,7 @@
 <ion-content>
     <ion-infinite-scroll>
         <ion-infinite-scroll-content>
-            <app-question [question]="questions[0]" [index]="1" (answer)="getAnswer($event)"></app-question>
+      <app-question [question]="currentQuestion$ | async" [index]="1" (answer)="getAnswer($event)"></app-question>
         </ion-infinite-scroll-content>
     </ion-infinite-scroll>
 </ion-content>
@@ -20,8 +21,8 @@
 <ion-footer no-shadow no-border>
     <ion-toolbar>
         <ion-buttons slot="end">
-            <ion-button *ngIf="!currentQuestionAnswered" color="primary" fill="solid">Skip</ion-button>
-            <ion-button *ngIf="currentQuestionAnswered" color="primary" fill="solid">Next</ion-button>
+            <ion-button *ngIf="!currentQuestionAnswered" (click)="nextOrSkip()" color="primary" fill="solid" shape="round" size="large">Skip</ion-button>
+            <ion-button *ngIf="currentQuestionAnswered" (click)="nextOrSkip()" color="primary" fill="solid" shape="round" size="large">Next</ion-button>
         </ion-buttons>
     </ion-toolbar>
 </ion-footer>

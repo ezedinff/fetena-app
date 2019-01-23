@@ -1,60 +1,45 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {DbService} from '../shared/asyncservices/db.service';
 import {Question} from '../shared/models/question';
+import {Observable, of} from 'rxjs';
+import {Subject} from '../shared/models/Subject';
 
 @Component({
     selector: 'app-quiz',
     templateUrl: './quiz.page.html',
     styleUrls: ['./quiz.page.scss']
 })
-export class QuizPage {
-    currentQuestion;
+export class QuizPage implements OnInit {
+    currentQuestion$: Observable<Question>;
     currentQuestionAnswered: boolean;
-    questions: Question[] = [
-        {
-            id: 'fddasfasfafdagerq343',
-            question: [
-                {
-                    type: 'paragraph',
-                    value: 'this the first paragraph'
-                }
-            ],
-            option_a: [
-                {
-                    type: 'paragraph',
-                    value: 'paragraph for option a'
-                }
-            ],
-            option_b: [
-                {
-                    type: 'paragraph',
-                    value: 'paragraph for option b'
-                }
-            ],
-            option_c: [
-                {
-                    type: 'paragraph',
-                    value: 'paragraph for option c'
-                }
-            ],
-            option_d: [
-                {
-                    type: 'paragraph',
-                    value: 'pragraph for option d'
-                }
-            ],
-            grade: '10',
-            answer: {
-                index: '0',
-                verified: true
-            },
-            origin: {
-                from: 'National Exam',
-                year: 1990
-            }
-        }
-    ];
+    questions;
+    currentIndex = 0;
+    constructor(private dbservice: DbService) {
+    }
+
     getAnswer(ans) {
         this.currentQuestionAnswered = true;
+
     }
     back() {}
+    nextOrSkip() {
+        if (this.questions.length > this.currentIndex ) {
+            this.currentIndex++;
+        }
+        this.currentQuestion$ = of(this.questions[this.currentIndex]);
+        this.currentQuestionAnswered = false;
+    }
+
+    ngOnInit(): void {
+        this.dbservice.getSubjectsDb().then( async subjects => {
+            if ( subjects) {
+                this.questions = await subjects['values']['subjects']
+                    .find((subject: Subject) => subject.id === 'amharic').questions
+                    .filter((question: Question) => question.grade === '10');
+                if (this.questions.length > 0 ) {
+                    this.currentQuestion$ = of(this.questions[this.currentIndex]);
+                }
+            }
+        });
+    }
 }

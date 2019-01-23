@@ -1,5 +1,7 @@
 import {Component} from '@angular/core';
 import {AlertController} from '@ionic/angular';
+import {Router} from '@angular/router';
+import {DbService} from '../shared/asyncservices/db.service';
 
 @Component({
     selector: 'app-home',
@@ -9,7 +11,9 @@ import {AlertController} from '@ionic/angular';
 export class HomePage {
 
 
-    constructor(public alertController: AlertController) {
+    constructor(public alertController: AlertController,
+                private router: Router,
+                private dbservice: DbService) {
     }
 
     openDialog(grade: string) {
@@ -37,11 +41,25 @@ export class HomePage {
                     handler: (val) => {
                        // this.scienceType = val.toUpperCase();
                        // this.saveUserSettings();
+                        this.handleUserChoice(grade);
                     }
                 }
             ]
         }).then(alert => {
             alert.present();
         });
+    }
+    handleUserChoice(grade, scienceType?) {
+        if (scienceType) {
+            this.dbservice.updateUser('grade', grade).then(() => {
+                this.dbservice.updateUser('scienceType', scienceType).then(() => {
+                    this.router.navigate(['subjects', grade]);
+                });
+            });
+        }
+        this.dbservice.updateUser('grade', grade).then(() => {
+            this.router.navigate(['subjects', grade]);
+        });
+        this.dbservice.getSubjects();
     }
 }

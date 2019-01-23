@@ -1,6 +1,6 @@
 <ion-header no-border>
     <ion-toolbar color="primary">
-        <ion-buttons slot="start" (click)="back()">
+        <ion-buttons slot="start" (click)="l.back()">
             <ion-icon slot="icon-only" name="arrow-round-back"></ion-icon>
         </ion-buttons>
         <ion-title>Subjects</ion-title>
@@ -11,8 +11,8 @@
         <ion-infinite-scroll-content>
             <ion-grid>
                 <ion-row>
-                    <ion-col size="6" *ngFor="let subject of subjects" no-padding>
-                        <ion-card tappable class="subject" color="secondary" (click)="goToQuizPage(subject.id)">
+                    <ion-col size="6" *ngFor="let subject of subjects$ | async" no-padding>
+                        <ion-card tappable class="subject" color="secondary" routerLink="/subject/{{subject.id}}">
                             <ion-card-content>
                                 <img [src]="subject.photo_path" alt="subject">
                             </ion-card-content>

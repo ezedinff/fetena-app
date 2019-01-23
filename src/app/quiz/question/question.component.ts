@@ -1,12 +1,13 @@
-import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {Question} from '../../shared/models/question';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
     selector: 'app-question',
     templateUrl: './question.component.html',
     styleUrls: ['question.component.scss']
 })
-export class QuestionComponent {
+export class QuestionComponent implements OnChanges {
     @Input()
     question: Question;
     @Input()
@@ -16,19 +17,18 @@ export class QuestionComponent {
     @ViewChild('optionB') optionB: ElementRef;
     @ViewChild('optionC') optionC: ElementRef;
     @ViewChild('optionD') optionD: ElementRef;
-    chosenAnswer;
-
+    chosenAnswer = new BehaviorSubject(null);
+    chosenAnswer$ = this.chosenAnswer.asObservable();
     chooseAnswer(ans: number, comp: HTMLElement) {
-        if (this.chosenAnswer === undefined) {
-            this.chosenAnswer = ans;
-            this.markTheCorrectAnswer();
-            if (Number(this.question.answer.index) === ans) {
-                comp.classList.add('correct-answer');
-            } else {
-                comp.classList.add('incorrect-answer');
-            }
-            this.answer.emit(ans);
+        this.chosenAnswer.next({
+            answer: ans,
+            component: comp
+        });
+        this.markTheCorrectAnswer();
+        if (Number(this.question.answer.index) !== ans) {
+            comp.classList.add('incorrect-answer');
         }
+        this.answer.emit(ans);
     }
     markTheCorrectAnswer() {
         if (Number(this.question.answer.index) === 0) {
@@ -39,6 +39,29 @@ export class QuestionComponent {
             this.optionC.nativeElement.classList.add('correct-answer');
         } else if (Number(this.question.answer.index) === 3) {
             this.optionD.nativeElement.classList.add('correct-answer');
+        }
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        this.chosenAnswer$.subscribe(answer => {
+            if (answer) {
+                this.removeclass();
+                if (answer['answer'] !== Number(this.question.answer.index)) {
+                    answer['component'].classList.remove('incorrect-answer');
+                }
+            }
+        });
+    }
+
+    removeclass() {
+        if (Number(this.question.answer.index) === 0) {
+            this.optionA.nativeElement.classList.remove('correct-answer');
+        } else if (Number(this.question.answer.index) === 1) {
+            this.optionB.nativeElement.classList.remove('correct-answer');
+        } else if (Number(this.question.answer.index) === 2) {
+            this.optionC.nativeElement.classList.remove('correct-answer');
+        } else if (Number(this.question.answer.index) === 3) {
+            this.optionD.nativeElement.classList.remove('correct-answer');
         }
     }
 }
